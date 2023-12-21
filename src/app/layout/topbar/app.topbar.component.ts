@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { LayoutService } from "./service/app.layout.service";
+import { LayoutService } from "../service/app.layout.service";
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 

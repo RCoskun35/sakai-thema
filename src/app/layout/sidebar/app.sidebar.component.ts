@@ -1,6 +1,6 @@
 import { Component, ElementRef } from '@angular/core';
-import { LayoutService } from "./service/app.layout.service";
-import { AppMenuComponent } from './app.menu.component';
+import { LayoutService } from "../service/app.layout.service";
+import { AppMenuComponent } from '../menu/app.menu.component';
 
 @Component({
     selector: 'app-sidebar',
