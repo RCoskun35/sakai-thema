@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MenuItem, SharedModule } from 'primeng/api';
+import { MenuItem, SharedModule, TreeNode } from 'primeng/api';
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
 import { Subscription } from 'rxjs';
@@ -8,8 +8,19 @@ import { ChartModule } from 'primeng/chart';
 import { MenuModule } from 'primeng/menu';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { NgStyle, CurrencyPipe } from '@angular/common';
+import { NgStyle, CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { DashboardsRoutingModule } from './dashboard-routing.module';
+import { TreeModule } from 'primeng/tree';
+import { TreeTableModule } from 'primeng/treetable';
+import { NodeService } from '../../service/node.service';
+import { HttpService } from '../../service/http.service';
+import { Organizations, RelatedOrganization } from 'src/app/models/organization_model';
+import { JoinNamesPipe } from '../../pipes/join-names.pipe';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { FormsModule } from '@angular/forms';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TokenModel } from 'src/app/models/token_model';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -21,105 +32,40 @@ import { DashboardsRoutingModule } from './dashboard-routing.module';
         ButtonModule,
         MenuModule,
         ChartModule,
-        CurrencyPipe
-        
+        CurrencyPipe,TreeModule, TreeTableModule, SharedModule, NgFor, NgIf,JoinNamesPipe,InputTextModule, PasswordModule, FormsModule, CheckboxModule
     ],
+    
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-
+    
     items!: MenuItem[];
-
+    selectedFiles3: TreeNode = {};
+    files3: TreeNode[] = [];
     products!: Product[];
-
+    organizations:Organizations[];
     chartData: any;
 
     chartOptions: any;
 
     subscription!: Subscription;
 
-    constructor(private productService: ProductService, public layoutService: LayoutService) {
+    constructor( public layoutService: LayoutService,private nodeService: NodeService,private httpService:HttpService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(() => {
-            console.log(1)
-            this.initChart();
-            console.log(2)
+            
         });
     }
-
+      
+      
     ngOnInit() {
-        this.initChart();
-        this.productService.getProductsSmall().then(data =>{
-            this.products = data
-            console.log(this.products)
-        } );
-
-        this.items = [
-            { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-            { label: 'Remove', icon: 'pi pi-fw pi-minus' }
-        ];
+        this.httpService.post<Organizations[]>("api/Organizations/GetOrganizationsWithParentsAndChilds",{},res=>{
+            this.organizations=res;
+        });
     }
-
-    initChart() {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-        this.chartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'First Dataset',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--bluegray-700'),
-                    borderColor: documentStyle.getPropertyValue('--bluegray-700'),
-                    tension: .4
-                },
-                {
-                    label: 'Second Dataset',
-                    data: [28, 48, 40, 19, 86, 27, 90],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--green-600'),
-                    borderColor: documentStyle.getPropertyValue('--green-600'),
-                    tension: .4
-                }
-            ]
-        };
-
-        this.chartOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: textColor
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
-        };
-    }
-
+   
     ngOnDestroy() {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
     }
 }
+

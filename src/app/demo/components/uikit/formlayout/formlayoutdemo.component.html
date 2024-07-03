@@ -1,107 +1,86 @@
 <div class="grid">
-	<div class="col-12 md:col-6">
-		<div class="card p-fluid">
-			<h5>Vertical</h5>
-			<div class="field">
-				<label htmlFor="name1">Name</label>
-				<input pInputText id="name1" type="text" />
-			</div>
-			<div class="field">
-				<label htmlFor="email1">Email</label>
-				<input pInputText id="email1" type="text" />
-			</div>
-			<div class="field">
-				<label htmlFor="age1">Age</label>
-				<input pInputText id="age1" type="text" />
-			</div>
-		</div>
-		
-		<div class="card p-fluid">
-			<h5>Vertical Grid</h5>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label htmlFor="name2">Name</label>
-					<input pInputText id="name2" type="text" />
-				</div>
-				<div class="field col">
-					<label htmlFor="email2">Email</label>
-					<input pInputText id="email2" type="text" />
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-12 md:col-6">
-		<div class="card p-fluid">
-			<h5>Horizontal</h5>
-			<div class="field grid">
-				<label htmlFor="name3" class="col-12 mb-2 md:col-2 md:mb-0">Name</label>
-				<div class="col-12 md:col-10">
-					<input pInputText id="name3" type="text" />
-				</div>
-			</div>
-			<div class="field grid">
-				<label htmlFor="email3" class="col-12 mb-2 md:col-2 md:mb-0">Email</label>
-				<div class="col-12 md:col-10">
-					<input pInputText id="email3" type="text" />
-				</div>
-			</div>
-		</div>
-
-		<div class="card">
-			<h5>Inline</h5>
-			<div class="formgroup-inline">
-				<div class="field">
-					<label htmlFor="firstname1" class="p-sr-only">Firstname</label>
-					<input pInputText id="firstname1" type="text" placeholder="Firstname" />
-				</div>
-				<div class="field">
-					<label htmlFor="lastname1" class="p-sr-only">Lastname</label>
-					<input pInputText id="lastname1" type="text" placeholder="Lastname" />
-				</div>
-				<button pButton label="Submit"></button>
-			</div>
-		</div>
-
-		<div class="card">
-			<h5>Help Text</h5>
-			<div class="field p-fluid">
-				<label htmlFor="username">Username</label>
-				<input pInputText id="username" type="text" />
-				<small>Enter your username to reset your password.</small>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-12">
-		<div class="card">
-			<h5>Advanced</h5>
-			<div class="p-fluid p-formgrid grid">
-				<div class="field col-12 md:col-6">
-					<label htmlFor="firstname2">Firstname</label>
-					<input pInputText id="firstname2" type="text" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="lastname2">Lastname</label>
-					<input pInputText id="lastname2" type="text" />
-				</div>
-				<div class="field col-12">
-					<label htmlFor="address">Address</label>
-					<input pInputTextarea id="address" rows="4" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="city">City</label>
-					<input pInputText id="city" type="text" />
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="state">State</label>
-					<p-dropdown [options]="dropdownItems" optionLabel="name" [(ngModel)]="selectedState"></p-dropdown>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="zip">Zip</label>
-					<input pInputText id="zip" type="text" />
-				</div>
-			</div>
-		</div>
-	</div>
+	<div class="card">
+	<div class="mt-2" style="display: flex; gap: 1rem;">
+        <div style="flex: 1;">
+            <label for="email1" class="text-900 text-xl font-medium mb-2">Email</label>
+            <input id="email1" type="text" [(ngModel)]="email" placeholder="Email address" pInputText class="w-full mb-5" style="padding:1rem; width: 100%;">
+        </div>
+        <div style="flex: 1;">
+            <label for="password1" class="text-900 font-medium text-xl mb-2">Şifre</label>
+            <p-password id="password1" [(ngModel)]="password" placeholder="Password" [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full p-3" 
+            ></p-password>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center;">
+            <button pButton label="Token Al" (click)="getToken(email,password)" class="p-3 text-xl" style="width: 100%;"></button>
+        </div>
+    </div>
 </div>
+	<div class="card ml-3">
+		<h5 mr-3>Seçenekler</h5>
+		<div class="flex flex-wrap gap-2">
+			
+			<button pButton pRipple type="button" label="Hepsini Getir" (click)="GetFull()" class="p-button-rounded p-button-success"></button>
+			<button pButton pRipple type="button" label="Kullanıcıya Göre Getir" (click)="GetByUser()" class="p-button-rounded p-button-warning"></button>
+		</div>
+	</div>
+    <div class="col-12 xl:col-12">
+        <div class="card">
+            <h5>Personeller</h5>
+            <p-table [value]="employees" 
+                [paginator]="true" 
+				[scrollable]="true" 
+    			scrollHeight="400px" 
+				[showCurrentPageReport]="true"
+				currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+                [resizableColumns]="true" 
+                [rows]="30" 
+                [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+						
+                        <th pSortableColumn="name">Adı <p-sortIcon field="name"></p-sortIcon></th>
+                        <th pSortableColumn="surname">Soyadı <p-sortIcon field="surname"></p-sortIcon></th>
+                        <th pSortableColumn="organization.name">Bağlı Organizasyonu <p-sortIcon field="organization.name"></p-sortIcon></th>
+                    </tr>
+					<tr>
+						<th></th>
+						<th></th>
+						<th>
+							<p-columnFilter field="organizations" matchMode="in" [showMenu]="false">
+								<ng-template pTemplate="filter" let-value let-filter="filterCallback">
+								  <p-multiSelect 
+									appendTo="body" 
+									[options]="organizations" 
+									placeholder="Organizasyonlar" 
+									(onChange)="filter($event.value)" 
+									optionLabel="name" 
+									[maxSelectedLabels]="1" 
+									[selectedItemsLabel]="'{0} organizations'">
+									<ng-template let-option pTemplate="item">
+									  <div class="inline-block vertical-align-middle">
+										{{option.name}}
+									  </div>
+									</ng-template>
+								  </p-multiSelect>
+								</ng-template>
+							  </p-columnFilter>
+						</th>
+					</tr>
+		
+                </ng-template>
+                <ng-template pTemplate="body" let-employee>
+                    <tr>
+                      
+                        <td style="width: 20%; max-width: 5rem;">{{employee.name}}</td>
+                        <td style="width: 20%; max-width: 5rem;">{{employee.surname}}</td>
+                        <td style="width: 20%; max-width: 5rem;">{{employee.organization.name}}</td>
+                       
+                      
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+       
+    </div>
+</div>
+
