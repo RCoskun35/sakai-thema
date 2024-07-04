@@ -15,13 +15,27 @@
         </div>
     </div>
 </div>
+
 	<div class="card ml-3">
 		<h5 mr-3>Seçenekler</h5>
 		<div class="flex flex-wrap gap-2">
-			
+			<p-toast key="tst"></p-toast>
 			<button pButton pRipple type="button" label="Hepsini Getir" (click)="GetFull()" class="p-button-rounded p-button-success"></button>
 			<button pButton pRipple type="button" label="Kullanıcıya Göre Getir" (click)="GetByUser()" class="p-button-rounded p-button-warning"></button>
+
 		</div>
+	</div>
+	<div class="card ml-3">
+		<button pButton pRipple type="button" label="Firma Yetkisi Ata" (click)="addOrganizationToUser()" class="p-button-rounded p-button-info"></button>
+
+	<h5>Yetkili Organizasyonlar</h5>
+			<p-multiSelect [options]="authOrganizations" [(ngModel)]="selectedMulti" placeholder="Yetkili Organizasyon Belirle" optionLabel="name" class="multiselect-custom" display="chip">
+				<ng-template let-country pTemplate="item">
+					<div class="flex align-items-center">
+						<span class="ml-2">{{country.name}}</span>
+					</div>
+				</ng-template>
+			</p-multiSelect>
 	</div>
     <div class="col-12 xl:col-12">
         <div class="card">

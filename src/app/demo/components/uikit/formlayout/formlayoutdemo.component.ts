@@ -11,27 +11,69 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TokenModel } from 'src/app/models/token_model';
 import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { Organizations } from 'src/app/models/organization_model';
+
+
 @Component({
     templateUrl: './formlayoutdemo.component.html',
     standalone: true,
-    imports: [InputTextModule, ButtonModule, InputTextareaModule, DropdownModule, FormsModule,TableModule,MultiSelectModule,
-         PasswordModule, FormsModule, CheckboxModule
+    providers: [MessageService],
+    imports: [
+            InputTextModule, 
+            ButtonModule, 
+            InputTextareaModule, 
+            DropdownModule, 
+            FormsModule,
+            TableModule,
+            MultiSelectModule,
+            PasswordModule, 
+            FormsModule, 
+            CheckboxModule,
+            ToastModule,
+
+            
+
     ]
 })
 export class FormLayoutDemoComponent {
-constructor(private httpService:HttpService){
+constructor(private service: MessageService,private httpService:HttpService){
+    this.service.messageObserver.subscribe(message => {
+        // Handle the received message
+        console.log(message);
+      });
     this.employees = [];
   this.organizations = [];
 
 }
+
+authOrganizations: any[] = [];
+selectedMulti: Organization[] = [];
 password:string="";
     email:string;
 getToken(email,password){
     this.httpService.post<TokenModel>("api/Auth/Login",{emailOrUserName:email,password:password},res=>{
-        console.log(res);
+      
         localStorage.removeItem('token');
         localStorage.setItem('token',res.data.token);
-    });
+        this.showSuccessViaToast();
+    },()=>{
+        this.showErrorViaToast();
+    }
+
+    );
+}
+
+addOrganizationToUser(){
+this.httpService.post<Organization>("api/Organizations/AddOrganizationToUser",this.selectedMulti,res=>{
+    this.selectedMulti=[];
+    this.showSuccessViaToast();
+}),
+()=>{
+    
+    this.showErrorViaToast();
+};
 }
 GetFull(){
     this.httpService.post<Employee[]>("api/Organizations/GetFullEmployees",{},res=>{
@@ -73,6 +115,9 @@ ngOnInit() {
               this.organizations.push(org);
             }
           });
+          this.httpService.post<Organizations[]>("api/Organizations/GetOrganizationsWithParentsAndChilds",{},res=>{
+          this.authOrganizations=res;
+          });
         this.employees=res;
        
     });
@@ -101,4 +146,24 @@ ngOnInit() {
 
     city2: any = null;
 
+
+
+
+    showInfoViaToast() {
+        this.service.add({ key: 'tst', severity: 'info', summary: 'Info Message', detail: 'PrimeNG rocks' });
+    }
+
+    showWarnViaToast() {
+        this.service.add({ key: 'tst', severity: 'warn', summary: 'Warn Message', detail: 'There are unsaved changes' });
+    }
+
+    showErrorViaToast() {
+        this.service.add({ key: 'tst', severity: 'error', summary: 'Hata', detail: 'İşlem hatalı' });
+    }
+
+    showSuccessViaToast() {
+        this.service.add({ key: 'tst', severity: 'success', summary: 'Okey', detail: 'İşlem başarılı' });
+    }
+
+    
 }
