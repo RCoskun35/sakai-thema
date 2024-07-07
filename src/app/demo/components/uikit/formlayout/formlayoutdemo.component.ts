@@ -14,6 +14,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Organizations } from 'src/app/models/organization_model';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 
 @Component({
@@ -36,10 +37,6 @@ import { Organizations } from 'src/app/models/organization_model';
 })
 export class FormLayoutDemoComponent {
 constructor(private service: MessageService,private httpService:HttpService){
-    this.service.messageObserver.subscribe(message => {
-        // Handle the received message
-        console.log(message);
-      });
     this.employees = [];
   this.organizations = [];
 
@@ -54,6 +51,13 @@ getToken(email,password){
       
         localStorage.removeItem('token');
         localStorage.setItem('token',res.data.token);
+
+        const decode: JwtPayload | any = jwtDecode(res.data.token);
+        console.log(decode);
+        this.httpService.post<Organizations[]>("api/Manager/GetMenusWithParentsAndChilds",{},res=>{
+            localStorage.setItem('menus',JSON.stringify(res))
+            });
+
         this.showSuccessViaToast();
     },()=>{
         this.showErrorViaToast();

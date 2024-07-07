@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem, SharedModule } from 'primeng/api';
+import { MessageService, SelectItem, SharedModule } from 'primeng/api';
 import { CountryService } from 'src/app/demo/service/country.service';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -21,82 +21,46 @@ import { FormsModule } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { HttpService } from 'src/app/demo/service/http.service';
+import { Role } from 'src/app/models/role_model';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
     templateUrl: './inputdemo.component.html',
     standalone: true,
-    imports: [InputTextModule, InputTextareaModule, AutoCompleteModule, FormsModule, CalendarModule, InputNumberModule, ChipsModule, SliderModule, RatingModule, ColorPickerModule, KnobModule, RadioButtonModule, CheckboxModule, InputSwitchModule, ListboxModule, DropdownModule, MultiSelectModule, SharedModule, ToggleButtonModule, SelectButtonModule, ButtonModule]
+    providers: [MessageService],
+    imports: [InputTextModule, InputTextareaModule, AutoCompleteModule, FormsModule, CalendarModule, InputNumberModule, ChipsModule, SliderModule, RatingModule, 
+        ColorPickerModule, KnobModule, RadioButtonModule, CheckboxModule, InputSwitchModule, ListboxModule, DropdownModule, MultiSelectModule, SharedModule, 
+        ToggleButtonModule, SelectButtonModule, ButtonModule,TableModule,ToastModule,ToolbarModule,DialogModule]
 })
 export class InputDemoComponent implements OnInit {
-    
-    countries: any[] = [];
+    roles:any[]=[];
+    role:{};
 
-    filteredCountries: any[] = [];
-
-    selectedCountryAdvanced: any[] = [];
-
-    valSlider = 50;
-
-    valColor = '#424242';
-
-    valRadio: string = '';
-
-    valCheck: string[] = [];
-
-    valCheck2: boolean = false;
-
-    valSwitch: boolean = false;
-
-    cities: SelectItem[] = [];
-
-    selectedList: SelectItem = { value: '' };
-
-    selectedDrop: SelectItem = { value: '' };
-
-    selectedMulti: any[] = [];
-
-    valToggle = false;
-
-    paymentOptions: any[] = [];
-
-    valSelect1: string = "";
-
-    valSelect2: string = "";
-
-    valueKnob = 20;
-
-    constructor(private countryService: CountryService) { }
+    constructor(private httpService:HttpService) { }
 
     ngOnInit() {
-        this.countryService.getCountries().then(countries => {
-            this.countries = countries;
-        });
-
-        this.cities = [
-            { label: 'New York', value: { id: 1, name: 'New York', code: 'NY' } },
-            { label: 'Rome', value: { id: 2, name: 'Rome', code: 'RM' } },
-            { label: 'London', value: { id: 3, name: 'London', code: 'LDN' } },
-            { label: 'Istanbul', value: { id: 4, name: 'Istanbul', code: 'IST' } },
-            { label: 'Paris', value: { id: 5, name: 'Paris', code: 'PRS' } }
-        ];
-
-        this.paymentOptions = [
-            { name: 'Option 1', value: 1 },
-            { name: 'Option 2', value: 2 },
-            { name: 'Option 3', value: 3 }
-        ];
+       this.httpService.post<Role[]>("api/manager/GetRoles",{},res=>{
+        this.roles = res;
+       })
+    }
+    roleDialog: boolean = false;
+    openNew() {
+        this.role = {};
+        this.roleDialog = true;
+    }
+    hideDialog() {
+        this.roleDialog = false;
+    }
+    addRole(){
+        this.httpService.post<Role[]>("api/manager/AddRole",this.role,res=>{
+            this.httpService.post<Role[]>("api/manager/GetRoles",{},result=>{
+                this.roles = result;
+               })
+           })
     }
 
-    filterCountry(event: any) {
-        const filtered: any[] = [];
-        const query = event.query;
-        for (let i = 0; i < this.countries.length; i++) {
-            const country = this.countries[i];
-            if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
-        }
-
-        this.filteredCountries = filtered;
-    }
 }

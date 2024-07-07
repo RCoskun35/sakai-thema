@@ -1,53 +1,72 @@
-<div class="card">
-    <h5>Invalid State</h5>
-    <p>All form components have an invalid state style to display the validation errors when ng-invalid ng-dirty combination is applied by Angular.</p>
-    <div class="grid p-fluid">
-        <div class="col-12 md:col-6">
-            <div class="field mt-3">
-                <label for="inputtext">InputText</label>
-                <input type="text" id="inputtext" pInputText class="ng-invalid ng-dirty">
-            </div>
-            <div class="field">
-                <label for="autocomplete">AutoComplete</label>
-                <p-autoComplete inputId="autocomplete" [(ngModel)]="value1" [suggestions]="filteredCountries" (completeMethod)="searchCountry($event)" field="name" class="ng-invalid ng-dirty"></p-autoComplete>
 
-            </div>
-            <div class="field">
-                <label for="calendar">Calendar</label>
-                <p-calendar inputId="calendar" [(ngModel)]="value2" class="ng-invalid ng-dirty" [showIcon]="true"></p-calendar>
-            </div>
-            <div class="field">
-                <label for="chips">Chips</label>
-                <p-chips inputId="chips" [(ngModel)]="value3" class="ng-invalid ng-dirty"></p-chips>
-            </div>
-            <div class="field">
-                <label for="password">Password</label>
-                <p-password [(ngModel)]="value8" class="ng-invalid ng-dirty"></p-password>
-            </div>
-        </div>
-        
-        <div class="col-12 md:col-6">                    
-            <div class="field mt-3">
-                <label for="inputmask">InputMask</label>
-                <p-inputMask inputId="inputmask" mask="99/99/9999" [(ngModel)]="value5" class="ng-invalid ng-dirty"></p-inputMask>
-            </div>
-            <div class="field">
-                <label for="inputnumber">InputNumber</label>
-                <p-inputNumber inputId="inputnumber" [(ngModel)]="value6" class="ng-invalid ng-dirty"></p-inputNumber>
-            </div>
-            <div class="field">
-                <label for="dropdown">Dropdown</label>
-                <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value9" optionLabel="name" class="ng-invalid ng-dirty"></p-dropdown>
-            </div>
-            <div class="field">
-                <label for="multiselect">MultiSelect</label>
-                <p-multiSelect inputId="multiselect" [options]="cities" [(ngModel)]="value10" optionLabel="name" [filter]="false" class="ng-invalid ng-dirty"></p-multiSelect>
-            </div>
-            <div class="field">
-                <label for="textarea">Textarea</label>
-                <textarea inputId="textarea" rows="3" cols="30" [(ngModel)]="value4" pInputTextarea class="ng-invalid ng-dirty"></textarea>
-            </div>
-        </div>
+<style>
+    .container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    margin: 1rem;
+    flex: 1 1 calc(50% - 2rem); /* İki card'ın eşit genişlikte olmasını sağlar */
+}
+</style>
+
+
+<button pButton pRipple type="button" label="Rol-Menü Ata" (click)="addMenuToRole()" class="p-button-rounded p-button-info"></button>
+
+<div class="container">
+
+    <div class="card ml-3">
+        <h5>Rol Seç</h5>
+        <p-multiSelect [options]="roles" [(ngModel)]="selectedRoles" placeholder="Rol Seç" optionLabel="name" class="multiselect-custom" display="chip">
+            <ng-template let-role pTemplate="item">
+                <div class="flex align-items-center">
+                    <span class="ml-2">{{role.name}}</span>
+                </div>
+            </ng-template>
+        </p-multiSelect>
+    </div>
+    <div class="card ml-3">
+        <h5>Menü Seç</h5>
+        <p-multiSelect [options]="menus" [(ngModel)]="selectedMenus" placeholder="Menü Seç" optionLabel="name" class="multiselect-custom" display="chip">
+            <ng-template let-menu pTemplate="item">
+                <div class="flex align-items-center">
+                    <span class="ml-2">{{menu.name}}</span>
+                </div>
+            </ng-template>
+        </p-multiSelect>
     </div>
 </div>
-
+<div class="col-12 xl:col-12">
+    <div class="card">
+        <h5>Role-Menü</h5>
+        <p-table [value]="roleMenus" 
+            [paginator]="true" 
+            [scrollable]="true" 
+            scrollHeight="400px" 
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="{totalRecords} kayıt arasından {first} ile {last} arasındaki kayıtlar gösteriliyor" 
+            [resizableColumns]="true" 
+            [rows]="30" 
+            [tableStyle]="{'min-width': '50rem'}">
+            <ng-template pTemplate="header">
+                <tr>
+                    
+                    <th pSortableColumn="roleName">Adı <p-sortIcon field="roleName"></p-sortIcon></th>
+                    <th pSortableColumn="menuName">Soyadı <p-sortIcon field="menuName"></p-sortIcon></th>
+                </tr>
+    
+            </ng-template>
+            <ng-template pTemplate="body" let-roleAndMenus>
+                <tr>
+                  
+                    <td style="width: 20%; max-width: 5rem;">{{roleAndMenus.roleName}}</td>
+                    <td style="width: 20%; max-width: 5rem;">{{roleAndMenus.menuName}}</td>
+                   
+                  
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+   
+</div>

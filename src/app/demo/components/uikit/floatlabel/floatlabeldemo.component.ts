@@ -10,10 +10,18 @@ import { CalendarModule } from 'primeng/calendar';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { HttpService } from 'src/app/demo/service/http.service';
+import { Menu } from 'primeng/menu';
+import { MessageService } from 'primeng/api';
 
 @Component({
     templateUrl: './floatlabeldemo.component.html',
     standalone: true,
+    providers: [MessageService],
     imports: [
         FormsModule,
         InputTextModule,
@@ -24,70 +32,40 @@ import { FormsModule } from '@angular/forms';
         InputNumberModule,
         DropdownModule,
         MultiSelectModule,
-        InputTextareaModule,
+        InputTextareaModule,ToastModule,ToolbarModule,TableModule,DialogModule
     ],
 })
+
 export class FloatLabelDemoComponent implements OnInit {
 
-    countries: any[] = [];
-
-    cities: any[];
-
-    filteredCountries: any[] = [];
-
-    value1: any;
-
-    value2: any;
-
-    value3: any;
-
-    value4: any;
-
-    value5: any;
-
-    value6: any;
-
-    value7: any;
-
-    value8: any;
-
-    value9: any;
-
-    value10: any;
-
-    value11: any;
-
-    value12: any;
-
-    constructor(private countryService: CountryService) {
-        this.cities = [
-            {name: 'New York', code: 'NY'},
-            {name: 'Rome', code: 'RM'},
-            {name: 'London', code: 'LDN'},
-            {name: 'Istanbul', code: 'IST'},
-            {name: 'Paris', code: 'PRS'}
-        ];
+    
+menus:any[]=[];
+menuDialog:boolean=false;
+menu:{};
+    constructor(private httpService:HttpService) {
+        
     }
 
     ngOnInit() {
-        this.countryService.getCountries().then(countries => {
-            this.countries = countries;
-        });
+        this.httpService.post<Menu[]>("api/manager/GetMenus",{},res=>{
+            this.menus = res;
+           })
+    }
+    
+    openNew() {
+        this.menu = {};
+        this.menuDialog = true;
+    }
+    hideDialog() {
+        this.menuDialog = false;
+    }
+    addMenu(){
+        this.httpService.post<Menu[]>("api/manager/AddMenu",this.menu,res=>{
+            this.httpService.post<Menu[]>("api/manager/GetMenus",{},result=>{
+                this.menus = result;
+               })
+           })
     }
 
-    searchCountry(event: any) {
-        // in a real application, make a request to a remote url with the query and
-        // return filtered results, for demo we filter at client side
-        const filtered: any[] = [];
-        const query = event.query;
-        // tslint:disable-next-line:prefer-for-of
-        for (let i = 0; i < this.countries.length; i++) {
-            const country = this.countries[i];
-            if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
-        }
-
-        this.filteredCountries = filtered;
-    }
+   
 }

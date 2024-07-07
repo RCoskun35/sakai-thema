@@ -1,86 +1,51 @@
-<div class="card">
-    <h5>Float Label</h5>
-    <p>All input text components support floating labels by adding (<mark>.p-float-label</mark>) to wrapper class.</p>
-    <div class="grid p-fluid mt-3">
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <input type="text" id="inputtext" pInputText [(ngModel)]="value1">
-                <label for="inputtext">InputText</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <p-autoComplete inputId="autocomplete" [(ngModel)]="value2" [suggestions]="filteredCountries"
-                (completeMethod)="searchCountry($event)" field="name"></p-autoComplete>
-                <label for="autocomplete">AutoComplete</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label p-input-icon-left">
-                <i class="pi pi-search"></i>
-                <input type="text" id="lefticon" pInputText [(ngModel)]="value3">
-                <label for="lefticon">Left Icon</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label p-input-icon-right">
-                <input type="text" id="righticon" pInputText [(ngModel)]="value4">
-                <label for="righticon">Right Icon</label>
-                <i class="pi pi-spin pi-spinner"></i>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <p-calendar inputId="calendar" [(ngModel)]="value5"></p-calendar>
-                <label for="calendar">Calendar</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <p-chips inputId="chips" [(ngModel)]="value6"></p-chips>
-                <label for="chips">Chips</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <p-inputMask inputId="inputmask" mask="99/99/9999" [(ngModel)]="value7"></p-inputMask>
-                <label for="inputmask">InputMask</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <p-inputNumber inputId="inputnumber" [(ngModel)]="value8"></p-inputNumber>
-                <label for="inputnumber">InputNumber</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <div class="p-inputgroup">
-                <span class="p-inputgroup-addon">
-                    <i class="pi pi-user"></i>
-                </span>
-                <span class="p-float-label">
-                    <input type="text" inputId="inputgroup" pInputText [(ngModel)]="value9"> 
-                    <label for="inputgroup">InputGroup</label>
-                </span>
-            </div>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value10" optionLabel="name"></p-dropdown>
-                <label for="dropdown">Dropdown</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <p-multiSelect inputId="multiselect" [options]="cities" [(ngModel)]="value11" optionLabel="name" [filter]="false"></p-multiSelect>
-                <label for="multiselect">MultiSelect</label>
-            </span>
-        </div>
-        <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-                <textarea inputId="textarea" rows="3" cols="30" [(ngModel)]="value12" pInputTextarea></textarea>
-                <label for="textarea">Textarea</label>
-            </span>
+<div class="grid">
+	<p-toast></p-toast>
+	<p-toolbar styleClass="mb-4">
+		<ng-template pTemplate="left">
+			<div class="my-2">
+				<button pButton pRipple label="Ekle" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+				
+			</div>
+		</ng-template>
+	</p-toolbar>
+    <div class="col-12 xl:col-12">
+        <div class="card">
+            <h5>Menüler</h5>
+            <p-table [value]="menus" 
+                [paginator]="true" 
+				[scrollable]="true" 
+    			scrollHeight="400px" 
+				[showCurrentPageReport]="true"
+				currentPageReportTemplate="{totalRecords} kayıt arasından {first} ile {last} arasındaki kayıtlar gösteriliyor" 
+                [resizableColumns]="true" 
+                [rows]="30" 
+                [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+						
+                        <th pSortableColumn="name">Adı <p-sortIcon field="name"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-role>
+                    <tr>
+                        <td style="width: 20%; max-width: 5rem;">{{role.name}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
     </div>
 </div>
+
+<p-dialog [(visible)]="menuDialog" [style]="{width: '450px'}" header="Menü Ekle" [modal]="true" class="p-fluid">
+	<ng-template pTemplate="content">
+		<div class="field">
+			<label for="name">Name</label>
+			<input type="text" pInputText id="name" [(ngModel)]="menu.name" required autofocus />
+		</div>
+	</ng-template>
+
+	<ng-template pTemplate="footer">
+		<button pButton pRipple label="Vazgeç" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+		<button pButton pRipple label="Ekle" icon="pi pi-check" class="p-button-text" (click)="addMenu()"></button>
+	</ng-template>
+</p-dialog>
