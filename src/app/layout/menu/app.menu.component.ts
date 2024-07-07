@@ -21,13 +21,13 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Home',
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
+                    { label: 'Organizasyonlar', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
                 ]
             },
             {
                 label: 'UI Components',
                 items: [
-                    { label: 'Organizasyonlar', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/formlayout'] },
+                    { label: 'Personeller', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/formlayout'] },
                     { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
                     { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
                     { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
@@ -61,7 +61,8 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Login',
                                 icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
+                                routerLink: ['/auth/login'],
+                                
                             },
                             {
                                 label: 'Error',
@@ -96,7 +97,8 @@ export class AppMenuComponent implements OnInit {
                         routerLink: ['/pages/empty']
                     },
                 ]
-            }
+            },
+            
         ];
     }
 }

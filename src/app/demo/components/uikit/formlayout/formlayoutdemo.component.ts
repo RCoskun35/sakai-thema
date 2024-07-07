@@ -32,9 +32,6 @@ import { Organizations } from 'src/app/models/organization_model';
             FormsModule, 
             CheckboxModule,
             ToastModule,
-
-            
-
     ]
 })
 export class FormLayoutDemoComponent {
@@ -78,7 +75,7 @@ this.httpService.post<Organization>("api/Organizations/AddOrganizationToUser",th
 GetFull(){
     this.httpService.post<Employee[]>("api/Organizations/GetFullEmployees",{},res=>{
         this.organizations=[];
-        this.employees=res;
+        this.employees=res.sort((a, b) => a.id - b.id);
         res.forEach(employee => {
             const org: Organization = new Organization();
             org.id = employee.organization.id;
@@ -92,7 +89,7 @@ GetFull(){
 GetByUser(){
     this.httpService.post<Employee[]>("api/Organizations/GetEmployeesToUser",{},res=>{
         this.organizations=[];
-        this.employees=res;
+        this.employees=res.sort((a, b) => a.id - b.id);
         res.forEach(employee => {
             const org: Organization = new Organization();
             org.id = employee.organization.id;
@@ -118,7 +115,7 @@ ngOnInit() {
           this.httpService.post<Organizations[]>("api/Organizations/GetOrganizationsWithParentsAndChilds",{},res=>{
           this.authOrganizations=res;
           });
-        this.employees=res;
+          this.employees=res.sort((a, b) => a.id - b.id);
        
     });
 }   
